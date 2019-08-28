@@ -6,15 +6,43 @@
   <meta name="viewport" content="initial-scale = 1.0, maximum-scale = 1.0" />
   <link rel="stylesheet" type="text/css" href="style.css">
   <title>Weather App V2</title>
-  <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous">
-  </script> -->
+  </script>
   <script type="text/javascript" src="script.js" defer></script>
 </head>
 
 <body>
+
 <!-- ========================== LANDING SECTION ========================== -->
+  <section id="current-location-section">
+    <div id="location-name-container">
+      <p id="location-name">Location Name</p>
+    </div>
+
+    <div id="location-date-container">
+      <p>Location Date</p>
+    </div>
+  </section>
+
+<!-- ========================== LANDING SECTION ========================== -->
+  <section id="daily-weather-section">
+    <div id="current-weather-container">
+      <p id="current-weather-description">Weather Description</p>
+      <div id="current-weather-icon"></div>
+      <p id="current-weather-temp">Temperature</p>
+    </div>
+
+    <div id="hourly-weather-container">
+      <p>12pm</p>
+      <p>1pm</p>
+      <p>2pm</p>
+      <p>3pm</p>
+      <p>4pm</p>
+    </div>
+  </section>
+
 </body>
 
 </html>
