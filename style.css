@@ -19,58 +19,74 @@
 
 
 
-
-
+/* ----------------------- CURRENT LOCATION SECTION ----------------------- */
 #current-location-section {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 1px;
 
   position: relative;
 
   height: 50px;
-  border: 1px dashed red;
+
+  background-color: black;
+  border-bottom: 1px solid black;
 }
 
 #location-name-container {
   grid-column: span 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   height: 100%;
 
-  border: 1px dashed yellow;
+  background-color: white;
 }
 
 #location-date-container {
   grid-column: span 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   height: 100%;
 
-  border: 1px dashed yellow;
+  background-color: white;
 }
 
 
 
-
-
+/* ------------------------ DAILY WEATHER SECTION ------------------------ */
 #daily-weather-section {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 1px;
 
   position: relative;
 
-  height: 200px;
+  height: auto;
 
-  border: 1px dashed black;
+  background-color: black;
 }
 
 #current-weather-container {
   grid-column: span 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   height: 100%;
 
   text-align: center;
 
-  border: 1px dashed blue;
+  background-color: white;
+  border-bottom: 1px solid black;
 }
+
+/* #current-weather-inner-tile {
+  border: 1px dashed yellow;
+} */
 
 #current-weather-icon {
   position: relative;
@@ -81,7 +97,7 @@
   height: 50px;
   margin: auto;
 
-  border: 1px dashed red;
+  border: 1px dashed black;
 }
 
 #hourly-weather-container {
@@ -89,5 +105,26 @@
 
   height: 100%;
 
-  border: 1px dashed blue;
+  background-color: white;
+}
+
+.hourly-weather-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  height: 40px;
+
+  border-bottom: 1px solid black;
+}
+
+.hourly-weather-tile {
+  grid-column: span 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hourly-icon {
+  width: auto;
+  height: 40px;
 }
