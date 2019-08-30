@@ -8,13 +8,19 @@
   margin: 0;
   padding: 0;
 
+  font-family: sans-serif;
   font-size: 100%;
   list-style: none;
+  color: white;
 
   box-sizing: border-box;
   border: 0;
 
   cursor: default;
+}
+
+.row-highlight {
+  background-color: #3c467b;
 }
 
 
@@ -41,7 +47,7 @@
 
   height: 100%;
 
-  background-color: white;
+  background-color: #323d74;
 }
 
 #location-date-container {
@@ -52,7 +58,7 @@
 
   height: 100%;
 
-  background-color: white;
+  background-color: #323d74;
 }
 
 
@@ -80,7 +86,7 @@
 
   text-align: center;
 
-  background-color: white;
+  background-color: #323d74;
   border-bottom: 1px solid black;
 }
 
@@ -97,7 +103,8 @@
   height: 50px;
   margin: auto;
 
-  border: 1px dashed black;
+  background-color: #adb1c7;
+  border-radius: 10px;
 }
 
 #hourly-weather-container {
@@ -105,7 +112,7 @@
 
   height: 100%;
 
-  background-color: white;
+  background-color: #323d74;
 }
 
 .hourly-weather-row {
@@ -127,4 +134,44 @@
 .hourly-icon {
   width: auto;
   height: 40px;
+}
+
+
+
+/* ---------------------- UPCOMING FORECAST SECTION ---------------------- */
+#upcoming-forecast-section {
+  position: relative;
+
+  width: 100%;
+  height: auto;
+
+  background-color: #323d74;
+}
+
+#upcoming-forecast-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+
+  height: 50px;
+
+  border-bottom: 1px solid black;
+}
+
+.upcoming-weather-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  height: 50px;
+
+  border-bottom: 1px solid black;
+}
+
+.upcoming-weather-tile {
+  grid-column: span 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
