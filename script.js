@@ -1,11 +1,14 @@
 /* ------------------------- VARIABLE DECLARATIONS ------------------------- */
 
 /* ~~~ CURRENT LOCATION SECTION ~~~ */
+var userLat = 0;
+var userLon = 0;
 var $locationName = $("#location-name");
 
 var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 var currentWeekday = "";
 var $locationDate = $("#location-date");
+
 
 /* ~~~~ DAILY WEATHER SECTION ~~~~ */
 var currentHour = 0;
@@ -36,6 +39,26 @@ var $hourlyTemp5 = $("#hourly-temp-5");
 
 
 /* ------------------------- FUNCTION DECLARATIONS ------------------------- */
+function geoLocateSuccess(pos) {
+  userLat = Math.round(pos.coords.latitude * 100) / 100;
+  userLon = Math.round(pos.coords.longitude * 100) / 100;
+
+  console.log("lat = " + userLat);
+  console.log("lon = " + userLon);
+
+  getCurrentWeekday();
+  getCurrentDate();
+
+  getCurrentWeatherAPI();
+  getForecastWeatherAPI();
+}
+
+
+function geoLocateError() {
+  console.log("geo blocked");
+}
+
+
 function getCurrentWeekday() {
   var today = new Date();
   var weekdayNum = today.getDay();
@@ -58,34 +81,8 @@ function getCurrentDate() {
 }
 
 
-function convertTimestamp(timestamp) {
-  currentHour = 0;
-
-  var date = new Date( timestamp * 1000 );
-  currentHour = date.getHours();
-
-  if(currentHour === 0) {
-    currentHour = "12AM";
-  }
-  else if(currentHour > 12) {
-    currentHour -= 12;
-    currentHour += "PM";
-  }
-  else {
-    currentHour += "AM";
-  }
-}
-
-
-function kelvinToFahrenheit(temp) {
-  newTempFahrenheit = (temp - 273.15) * 9/5 + 32;
-
-  newTempFahrenheit = Math.round(newTempFahrenheit) + "&deg;";
-}
-
-
-function apiTest() {
-  var apiAddress = "http://api.openweathermap.org/data/2.5/weather?zip=25303&APPID=1a21bb575add2b00bb03906bf2e18e87";
+function getCurrentWeatherAPI() {
+  var apiAddress = `http://api.openweathermap.org/data/2.5/weather?lat=${userLat}&lon=${userLon}&APPID=1a21bb575add2b00bb03906bf2e18e87`;
 
   $.get(apiAddress).done(function(data) {
     console.log("api data loaded");
@@ -102,8 +99,8 @@ function apiTest() {
 }
 
 
-function apiTestHourly() {
-  var apiAddress = "http://api.openweathermap.org/data/2.5/forecast?zip=25303&APPID=1a21bb575add2b00bb03906bf2e18e87";
+function getForecastWeatherAPI() {
+  var apiAddress = `http://api.openweathermap.org/data/2.5/forecast?lat=${userLat}&lon=${userLon}&APPID=1a21bb575add2b00bb03906bf2e18e87`;
 
   $.get(apiAddress).done(function(data) {
     convertTimestamp(data.list[0].dt);
@@ -157,16 +154,36 @@ function apiTestHourly() {
 }
 
 
+function convertTimestamp(timestamp) {
+  currentHour = 0;
+
+  var date = new Date( timestamp * 1000 );
+  currentHour = date.getHours();
+
+  if(currentHour === 0) {
+    currentHour = "12AM";
+  }
+  else if(currentHour > 12) {
+    currentHour -= 12;
+    currentHour += "PM";
+  }
+  else {
+    currentHour += "AM";
+  }
+}
+
+
+function kelvinToFahrenheit(temp) {
+  newTempFahrenheit = (temp - 273.15) * 9/5 + 32;
+
+  newTempFahrenheit = Math.round(newTempFahrenheit) + "&deg;";
+}
+
+
 
 
 
 /* ---------------------------- EVENT HANDLERS ---------------------------- */
 $(document).ready(function() {
-  getCurrentWeekday();
-
-  getCurrentDate();
-
-  apiTest();
-
-  apiTestHourly();
+  navigator.geolocation.getCurrentPosition(geoLocateSuccess, geoLocateError);
 });
