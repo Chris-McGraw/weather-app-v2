@@ -7,11 +7,12 @@ var $locationName = $("#location-name");
 
 var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 var currentWeekday = "";
+var currentDate = "";
 var $locationDate = $("#location-date");
 
 
 /* ~~~~ DAILY WEATHER SECTION ~~~~ */
-var currentHour = 0;
+var localHour = 0;
 var newTempFahrenheit = 0;
 
 var $currentWeatherIcon = $("#current-weather-icon");
@@ -40,6 +41,20 @@ var $hourlyTemp5 = $("#hourly-temp-5");
 var hourlyTempArray = [$hourlyTemp1, $hourlyTemp2, $hourlyTemp3, $hourlyTemp4, $hourlyTemp5];
 
 
+/* ~~ UPCOMING FORECAST SECTION ~~ */
+var localDate = "";
+var upcomingDateComparator = "";
+
+var fiveDayForecastArray = [];
+
+var $upcomingDate1 = $("#upcoming-date-1");
+var $upcomingDate2 = $("#upcoming-date-2");
+var $upcomingDate3 = $("#upcoming-date-3");
+var $upcomingDate4 = $("#upcoming-date-4");
+var $upcomingDate5 = $("#upcoming-date-5");
+var upcomingDateArray = [$upcomingDate1, $upcomingDate2, $upcomingDate3, $upcomingDate4, $upcomingDate5];
+
+
 
 
 
@@ -51,9 +66,6 @@ function geoLocateSuccess(pos) {
   console.log("lat = " + userLat);
   console.log("lon = " + userLon);
 
-  getCurrentWeekday();
-  getCurrentDate();
-
   getCurrentWeatherAPI();
   getForecastWeatherAPI();
 }
@@ -64,25 +76,10 @@ function geoLocateError() {
 }
 
 
-function getCurrentWeekday() {
-  var today = new Date();
-  var weekdayNum = today.getDay();
+function kelvinToFahrenheit(temp) {
+  newTempFahrenheit = (temp - 273.15) * 9/5 + 32;
 
-  currentWeekday = daysOfWeek[weekdayNum];
-
-  $locationDate.html(currentWeekday);
-}
-
-
-function getCurrentDate() {
-  var currentDate = new Date();
-  var dd = String(currentDate.getDate()).padStart(2, "0");
-  var mm = String(currentDate.getMonth() + 1).padStart(2, "0");
-  var yyyy = currentDate.getFullYear();
-
-  currentDate = mm + "/" + dd + "/" + yyyy;
-
-  $locationDate.append(" - " + currentDate);
+  newTempFahrenheit = Math.round(newTempFahrenheit) + "&deg;";
 }
 
 
@@ -90,17 +87,53 @@ function getCurrentWeatherAPI() {
   var apiAddress = `http://api.openweathermap.org/data/2.5/weather?lat=${userLat}&lon=${userLon}&APPID=1a21bb575add2b00bb03906bf2e18e87`;
 
   $.get(apiAddress).done(function(data) {
-    console.log("api data loaded");
+    console.log("");
+    console.log("current weather api data loaded");
 
-    $locationName.html(data.name + ", " + data.sys.country);
+    appendCurrentLocationData(data);
 
-    kelvinToFahrenheit(data.main.temp);
-
-    $currentWeatherIcon.html("<img src= http://openweathermap.org/img/w/" + data.weather[0].icon + ".png>");
-    $currentWeatherDescription.html(data.weather[0].main);
-    //$currentWeatherTemp.html(data.main.temp);
-    $currentWeatherTemp.html(newTempFahrenheit + "F");
+    appendCurrentWeatherData(data);
   });
+}
+
+
+function appendCurrentLocationData(data) {
+  $locationName.html(data.name + ", " + data.sys.country);
+
+  getCurrentWeekday();
+  $locationDate.html(currentWeekday);
+
+  getCurrentDate();
+  $locationDate.append(" - " + currentDate);
+}
+
+
+function getCurrentWeekday() {
+  var today = new Date();
+  var weekdayNum = today.getDay();
+
+  currentWeekday = daysOfWeek[weekdayNum];
+}
+
+
+function getCurrentDate() {
+  var date = new Date();
+  var dd = String(date.getDate()).padStart(2, "0");
+  var mm = String(date.getMonth() + 1).padStart(2, "0");
+  var yyyy = date.getFullYear();
+
+  currentDate = mm + "/" + dd + "/" + yyyy;
+}
+
+
+function appendCurrentWeatherData(data) {
+  $currentWeatherDescription.html(data.weather[0].main);
+
+  $currentWeatherIcon.html("<img src= http://openweathermap.org/img/w/" + data.weather[0].icon + ".png>");
+
+  //$currentWeatherTemp.html(data.main.temp);
+  kelvinToFahrenheit(data.main.temp);
+  $currentWeatherTemp.html(newTempFahrenheit + "F");
 }
 
 
@@ -108,42 +141,79 @@ function getForecastWeatherAPI() {
   var apiAddress = `http://api.openweathermap.org/data/2.5/forecast?lat=${userLat}&lon=${userLon}&APPID=1a21bb575add2b00bb03906bf2e18e87`;
 
   $.get(apiAddress).done(function(data) {
-    for(var n = 0; n < 5; n++) {
-      convertTimestamp(data.list[n].dt);
-      hourlyTimeArray[n].html(currentHour);
+    console.log("");
+    console.log("5-day forecast api data loaded");
 
-      hourlyIconArray[n].html("<img class='hourly-icon' src= http://openweathermap.org/img/w/" + data.list[n].weather[0].icon + ".png>");
+    appendHourlyWeatherData(data);
 
-      kelvinToFahrenheit(data.list[n].main.temp);
-      hourlyTempArray[n].html(newTempFahrenheit);
+    fillForecastArrays(data);
+
+    appendUpcomingWeatherData(data);
+  });
+}
+
+
+function appendHourlyWeatherData(data) {
+  for(var n = 0; n < 5; n++) {
+    timestampToLocalHour(data.list[n].dt);
+    hourlyTimeArray[n].html(localHour);
+
+    hourlyIconArray[n].html("<img class='hourly-icon' src= http://openweathermap.org/img/w/" + data.list[n].weather[0].icon + ".png>");
+
+    kelvinToFahrenheit(data.list[n].main.temp);
+    hourlyTempArray[n].html(newTempFahrenheit);
+  }
+}
+
+
+function timestampToLocalHour(timestamp) {
+  localHour = 0;
+
+  var date = new Date( timestamp * 1000 );
+  localHour = date.getHours();
+
+  if(localHour === 0) {
+    localHour = "12AM";
+  }
+  else if(localHour > 12) {
+    localHour -= 12;
+    localHour += "PM";
+  }
+  else {
+    localHour += "AM";
+  }
+}
+
+
+function fillForecastArrays(data) {
+  upcomingDateComparator = currentDate;
+
+  data.list.forEach(function(i) {
+    timestampToLocalDate(i.dt);
+
+    if(localDate !== upcomingDateComparator) {
+      fiveDayForecastArray.push(localDate);
+
+      upcomingDateComparator = localDate;
     }
   });
 }
 
 
-function convertTimestamp(timestamp) {
-  currentHour = 0;
-
+function timestampToLocalDate(timestamp) {
   var date = new Date( timestamp * 1000 );
-  currentHour = date.getHours();
+  var dd = String(date.getDate()).padStart(2, "0");
+  var mm = String(date.getMonth() + 1).padStart(2, "0");
+  var yyyy = date.getFullYear();
 
-  if(currentHour === 0) {
-    currentHour = "12AM";
-  }
-  else if(currentHour > 12) {
-    currentHour -= 12;
-    currentHour += "PM";
-  }
-  else {
-    currentHour += "AM";
-  }
+  localDate = mm + "/" + dd + "/" + yyyy;
 }
 
 
-function kelvinToFahrenheit(temp) {
-  newTempFahrenheit = (temp - 273.15) * 9/5 + 32;
-
-  newTempFahrenheit = Math.round(newTempFahrenheit) + "&deg;";
+function appendUpcomingWeatherData(data) {
+  for(var v = 0; v < 5; v++) {
+    upcomingDateArray[v].html( fiveDayForecastArray[v].slice(0, 5) );
+  }
 }
 
 
