@@ -66,9 +66,6 @@ function geoLocateSuccess(pos) {
   console.log("lat = " + userLat);
   console.log("lon = " + userLon);
 
-  getCurrentWeekday();
-  getCurrentDate();
-
   getCurrentWeatherAPI();
   getForecastWeatherAPI();
 }
@@ -79,13 +76,43 @@ function geoLocateError() {
 }
 
 
+function kelvinToFahrenheit(temp) {
+  newTempFahrenheit = (temp - 273.15) * 9/5 + 32;
+
+  newTempFahrenheit = Math.round(newTempFahrenheit) + "&deg;";
+}
+
+
+function getCurrentWeatherAPI() {
+  var apiAddress = `http://api.openweathermap.org/data/2.5/weather?lat=${userLat}&lon=${userLon}&APPID=1a21bb575add2b00bb03906bf2e18e87`;
+
+  $.get(apiAddress).done(function(data) {
+    console.log("");
+    console.log("current weather api data loaded");
+
+    appendCurrentLocationData(data);
+
+    appendCurrentWeatherData(data);
+  });
+}
+
+
+function appendCurrentLocationData(data) {
+  $locationName.html(data.name + ", " + data.sys.country);
+
+  getCurrentWeekday();
+  $locationDate.html(currentWeekday);
+
+  getCurrentDate();
+  $locationDate.append(" - " + currentDate);
+}
+
+
 function getCurrentWeekday() {
   var today = new Date();
   var weekdayNum = today.getDay();
 
   currentWeekday = daysOfWeek[weekdayNum];
-
-  $locationDate.html(currentWeekday);
 }
 
 
@@ -96,26 +123,17 @@ function getCurrentDate() {
   var yyyy = date.getFullYear();
 
   currentDate = mm + "/" + dd + "/" + yyyy;
-
-  $locationDate.append(" - " + currentDate);
 }
 
 
-function getCurrentWeatherAPI() {
-  var apiAddress = `http://api.openweathermap.org/data/2.5/weather?lat=${userLat}&lon=${userLon}&APPID=1a21bb575add2b00bb03906bf2e18e87`;
+function appendCurrentWeatherData(data) {
+  $currentWeatherDescription.html(data.weather[0].main);
 
-  $.get(apiAddress).done(function(data) {
-    console.log("api data loaded");
+  $currentWeatherIcon.html("<img src= http://openweathermap.org/img/w/" + data.weather[0].icon + ".png>");
 
-    $locationName.html(data.name + ", " + data.sys.country);
-
-    kelvinToFahrenheit(data.main.temp);
-
-    $currentWeatherIcon.html("<img src= http://openweathermap.org/img/w/" + data.weather[0].icon + ".png>");
-    $currentWeatherDescription.html(data.weather[0].main);
-    //$currentWeatherTemp.html(data.main.temp);
-    $currentWeatherTemp.html(newTempFahrenheit + "F");
-  });
+  //$currentWeatherTemp.html(data.main.temp);
+  kelvinToFahrenheit(data.main.temp);
+  $currentWeatherTemp.html(newTempFahrenheit + "F");
 }
 
 
@@ -123,6 +141,9 @@ function getForecastWeatherAPI() {
   var apiAddress = `http://api.openweathermap.org/data/2.5/forecast?lat=${userLat}&lon=${userLon}&APPID=1a21bb575add2b00bb03906bf2e18e87`;
 
   $.get(apiAddress).done(function(data) {
+    console.log("");
+    console.log("5-day forecast api data loaded");
+
     appendHourlyWeatherData(data);
 
     fillForecastArrays(data);
@@ -161,13 +182,6 @@ function timestampToLocalHour(timestamp) {
   else {
     localHour += "AM";
   }
-}
-
-
-function kelvinToFahrenheit(temp) {
-  newTempFahrenheit = (temp - 273.15) * 9/5 + 32;
-
-  newTempFahrenheit = Math.round(newTempFahrenheit) + "&deg;";
 }
 
 
