@@ -123,44 +123,25 @@ function getForecastWeatherAPI() {
   var apiAddress = `http://api.openweathermap.org/data/2.5/forecast?lat=${userLat}&lon=${userLon}&APPID=1a21bb575add2b00bb03906bf2e18e87`;
 
   $.get(apiAddress).done(function(data) {
-    for(var n = 0; n < 5; n++) {
-      timestampToLocalHour(data.list[n].dt);
-      hourlyTimeArray[n].html(localHour);
+    appendHourlyWeatherData(data);
 
-      hourlyIconArray[n].html("<img class='hourly-icon' src= http://openweathermap.org/img/w/" + data.list[n].weather[0].icon + ".png>");
+    fillForecastArrays(data);
 
-      kelvinToFahrenheit(data.list[n].main.temp);
-      hourlyTempArray[n].html(newTempFahrenheit);
-    }
-
-
-
-    makeFiveDayForecastArray(data);
-
-    console.log(fiveDayForecastArray);
-
-    for(var v = 0; v < 5; v++) {
-      upcomingDateArray[v].html(fiveDayForecastArray[v]);
-    }
-
+    appendUpcomingWeatherData(data);
   });
 }
 
 
-function makeFiveDayForecastArray(data) {
-  upcomingDateComparator = currentDate;
+function appendHourlyWeatherData(data) {
+  for(var n = 0; n < 5; n++) {
+    timestampToLocalHour(data.list[n].dt);
+    hourlyTimeArray[n].html(localHour);
 
-  data.list.forEach(function(i) {
-    timestampToLocalDate(i.dt);
+    hourlyIconArray[n].html("<img class='hourly-icon' src= http://openweathermap.org/img/w/" + data.list[n].weather[0].icon + ".png>");
 
-    if(localDate !== upcomingDateComparator) {
-      //console.log(localDate);
-
-      fiveDayForecastArray.push(localDate.slice(0, 5));
-
-      upcomingDateComparator = localDate;
-    }
-  });
+    kelvinToFahrenheit(data.list[n].main.temp);
+    hourlyTempArray[n].html(newTempFahrenheit);
+  }
 }
 
 
@@ -190,6 +171,21 @@ function kelvinToFahrenheit(temp) {
 }
 
 
+function fillForecastArrays(data) {
+  upcomingDateComparator = currentDate;
+
+  data.list.forEach(function(i) {
+    timestampToLocalDate(i.dt);
+
+    if(localDate !== upcomingDateComparator) {
+      fiveDayForecastArray.push(localDate);
+
+      upcomingDateComparator = localDate;
+    }
+  });
+}
+
+
 function timestampToLocalDate(timestamp) {
   var date = new Date( timestamp * 1000 );
   var dd = String(date.getDate()).padStart(2, "0");
@@ -197,6 +193,13 @@ function timestampToLocalDate(timestamp) {
   var yyyy = date.getFullYear();
 
   localDate = mm + "/" + dd + "/" + yyyy;
+}
+
+
+function appendUpcomingWeatherData(data) {
+  for(var v = 0; v < 5; v++) {
+    upcomingDateArray[v].html( fiveDayForecastArray[v].slice(0, 5) );
+  }
 }
 
 
