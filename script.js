@@ -19,20 +19,25 @@ var $currentWeatherDescription = $("#current-weather-description");
 var $currentWeatherTemp = $("#current-weather-temp");
 
 var $hourlyTime1 = $("#hourly-time-1");
-var $hourlyIcon1 = $("#hourly-icon-1");
-var $hourlyTemp1 = $("#hourly-temp-1");
 var $hourlyTime2 = $("#hourly-time-2");
-var $hourlyIcon2 = $("#hourly-icon-2");
-var $hourlyTemp2 = $("#hourly-temp-2");
 var $hourlyTime3 = $("#hourly-time-3");
-var $hourlyIcon3 = $("#hourly-icon-3");
-var $hourlyTemp3 = $("#hourly-temp-3");
 var $hourlyTime4 = $("#hourly-time-4");
-var $hourlyIcon4 = $("#hourly-icon-4");
-var $hourlyTemp4 = $("#hourly-temp-4");
 var $hourlyTime5 = $("#hourly-time-5");
+var hourlyTimeArray = [$hourlyTime1, $hourlyTime2, $hourlyTime3, $hourlyTime4, $hourlyTime5];
+
+var $hourlyIcon1 = $("#hourly-icon-1");
+var $hourlyIcon2 = $("#hourly-icon-2");
+var $hourlyIcon3 = $("#hourly-icon-3");
+var $hourlyIcon4 = $("#hourly-icon-4");
 var $hourlyIcon5 = $("#hourly-icon-5");
+var hourlyIconArray = [$hourlyIcon1, $hourlyIcon2, $hourlyIcon3, $hourlyIcon4, $hourlyIcon5];
+
+var $hourlyTemp1 = $("#hourly-temp-1");
+var $hourlyTemp2 = $("#hourly-temp-2");
+var $hourlyTemp3 = $("#hourly-temp-3");
+var $hourlyTemp4 = $("#hourly-temp-4");
 var $hourlyTemp5 = $("#hourly-temp-5");
+var hourlyTempArray = [$hourlyTemp1, $hourlyTemp2, $hourlyTemp3, $hourlyTemp4, $hourlyTemp5];
 
 
 
@@ -103,53 +108,15 @@ function getForecastWeatherAPI() {
   var apiAddress = `http://api.openweathermap.org/data/2.5/forecast?lat=${userLat}&lon=${userLon}&APPID=1a21bb575add2b00bb03906bf2e18e87`;
 
   $.get(apiAddress).done(function(data) {
-    convertTimestamp(data.list[0].dt);
-    $hourlyTime1.html(currentHour);
+    for(var n = 0; n < 5; n++) {
+      convertTimestamp(data.list[n].dt);
+      hourlyTimeArray[n].html(currentHour);
 
-    $hourlyIcon1.html("<img class='hourly-icon' src= http://openweathermap.org/img/w/" + data.list[0].weather[0].icon + ".png>");
+      hourlyIconArray[n].html("<img class='hourly-icon' src= http://openweathermap.org/img/w/" + data.list[n].weather[0].icon + ".png>");
 
-    kelvinToFahrenheit(data.list[0].main.temp);
-    $hourlyTemp1.html(newTempFahrenheit);
-
-
-
-    convertTimestamp(data.list[1].dt);
-    $hourlyTime2.html(currentHour);
-
-    $hourlyIcon2.html("<img class='hourly-icon' src= http://openweathermap.org/img/w/" + data.list[1].weather[0].icon + ".png>");
-
-    kelvinToFahrenheit(data.list[1].main.temp);
-    $hourlyTemp2.html(newTempFahrenheit);
-
-
-
-    convertTimestamp(data.list[2].dt);
-    $hourlyTime3.html(currentHour);
-
-    $hourlyIcon3.html("<img class='hourly-icon' src= http://openweathermap.org/img/w/" + data.list[2].weather[0].icon + ".png>");
-
-    kelvinToFahrenheit(data.list[2].main.temp);
-    $hourlyTemp3.html(newTempFahrenheit);
-
-
-
-    convertTimestamp(data.list[3].dt);
-    $hourlyTime4.html(currentHour);
-
-    $hourlyIcon4.html("<img class='hourly-icon' src= http://openweathermap.org/img/w/" + data.list[3].weather[0].icon + ".png>");
-
-    kelvinToFahrenheit(data.list[3].main.temp);
-    $hourlyTemp4.html(newTempFahrenheit);
-
-
-
-    convertTimestamp(data.list[4].dt);
-    $hourlyTime5.html(currentHour);
-
-    $hourlyIcon5.html("<img class='hourly-icon' src= http://openweathermap.org/img/w/" + data.list[4].weather[0].icon + ".png>");
-
-    kelvinToFahrenheit(data.list[4].main.temp);
-    $hourlyTemp5.html(newTempFahrenheit);
+      kelvinToFahrenheit(data.list[n].main.temp);
+      hourlyTempArray[n].html(newTempFahrenheit);
+    }
   });
 }
 
