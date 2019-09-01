@@ -15,7 +15,7 @@ var $locationDate = $("#location-date");
 var localHour = 0;
 var newTempFahrenheit = 0;
 
-var $currentWeatherIcon = $("#current-weather-icon");
+var $currentWeatherIconContainer = $("#current-weather-icon-container");
 var $currentWeatherDescription = $("#current-weather-description");
 var $currentWeatherTemp = $("#current-weather-temp");
 
@@ -129,7 +129,7 @@ function getCurrentDate() {
 function appendCurrentWeatherData(data) {
   $currentWeatherDescription.html(data.weather[0].main);
 
-  $currentWeatherIcon.html("<img src= http://openweathermap.org/img/w/" + data.weather[0].icon + ".png>");
+  $currentWeatherIconContainer.html("<img class=current-weather-icon src= http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png>");
 
   //$currentWeatherTemp.html(data.main.temp);
   kelvinToFahrenheit(data.main.temp);
@@ -158,7 +158,7 @@ function appendHourlyWeatherData(data) {
     timestampToLocalHour(data.list[n].dt);
     hourlyTimeArray[n].html(localHour);
 
-    hourlyIconArray[n].html("<img class='hourly-icon' src= http://openweathermap.org/img/w/" + data.list[n].weather[0].icon + ".png>");
+    hourlyIconArray[n].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + data.list[n].weather[0].icon + ".png>");
 
     kelvinToFahrenheit(data.list[n].main.temp);
     hourlyTempArray[n].html(newTempFahrenheit);
