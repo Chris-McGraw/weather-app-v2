@@ -33,7 +33,7 @@
 
   position: relative;
 
-  height: 50px;
+  height: 80px;
 
   background-color: black;
   border-bottom: 1px solid black;
@@ -124,7 +124,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 
-  height: 40px;
+  height: 50px;
 
   border-bottom: 1px solid black;
 }
@@ -163,7 +163,7 @@
 
   position: relative;
 
-  height: 50px;
+  height: 80px;
 
   border-bottom: 1px solid black;
 }
@@ -172,7 +172,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 
-  height: 40px;
+  height: 50px;
 
   border-bottom: 1px solid black;
 }
