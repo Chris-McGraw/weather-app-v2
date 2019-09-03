@@ -82,6 +82,11 @@ function geoLocateSuccess(pos) {
   console.log("lat = " + userLat);
   console.log("lon = " + userLon);
 
+  getCurrentDate();
+  getCurrentWeekday();
+  console.log("");
+  console.log(currentDate);
+
   getCurrentWeatherAPI();
   getForecastWeatherAPI();
 }
@@ -89,6 +94,24 @@ function geoLocateSuccess(pos) {
 
 function geoLocateError() {
   console.log("geo blocked");
+}
+
+
+function getCurrentDate() {
+  var date = new Date();
+  var dd = String(date.getDate()).padStart(2, "0");
+  var mm = String(date.getMonth() + 1).padStart(2, "0");
+  var yyyy = date.getFullYear();
+
+  currentDate = mm + "/" + dd + "/" + yyyy;
+}
+
+
+function getCurrentWeekday() {
+  var today = new Date();
+  var weekdayNum = today.getDay();
+
+  currentWeekday = daysOfWeek[weekdayNum];
 }
 
 
@@ -116,29 +139,9 @@ function getCurrentWeatherAPI() {
 function appendCurrentLocationData(data) {
   $locationName.html(data.name + ", " + data.sys.country);
 
-  getCurrentWeekday();
   $locationDate.html(currentWeekday);
 
-  getCurrentDate();
   $locationDate.append(" - " + currentDate);
-}
-
-
-function getCurrentWeekday() {
-  var today = new Date();
-  var weekdayNum = today.getDay();
-
-  currentWeekday = daysOfWeek[weekdayNum];
-}
-
-
-function getCurrentDate() {
-  var date = new Date();
-  var dd = String(date.getDate()).padStart(2, "0");
-  var mm = String(date.getMonth() + 1).padStart(2, "0");
-  var yyyy = date.getFullYear();
-
-  currentDate = mm + "/" + dd + "/" + yyyy;
 }
 
 
