@@ -45,6 +45,7 @@ var hourlyTempArray = [$hourlyTemp1, $hourlyTemp2, $hourlyTemp3, $hourlyTemp4, $
 var localDate = "";
 var upcomingDateComparator = "";
 
+var currentDayForecastCountArray = [];
 var fiveDayForecastArray = [];
 
 var $upcomingDate1 = $("#upcoming-date-1");
@@ -54,6 +55,21 @@ var $upcomingDate4 = $("#upcoming-date-4");
 var $upcomingDate5 = $("#upcoming-date-5");
 var upcomingDateArray = [$upcomingDate1, $upcomingDate2, $upcomingDate3, $upcomingDate4, $upcomingDate5];
 
+var upcomingDay1IconArray = [];
+var $upcomingIcon1 = $("#upcoming-icon-1");
+
+var upcomingDay2IconArray = [];
+var $upcomingIcon2 = $("#upcoming-icon-2");
+
+var upcomingDay3IconArray = [];
+var $upcomingIcon3 = $("#upcoming-icon-3");
+
+var upcomingDay4IconArray = [];
+var $upcomingIcon4 = $("#upcoming-icon-4");
+
+var upcomingDay5IconArray = [];
+var $upcomingIcon5 = $("#upcoming-icon-5");
+var upcomingIconArray = [$upcomingIcon1, $upcomingIcon2, $upcomingIcon3, $upcomingIcon4, $upcomingIcon5];
 
 
 
@@ -146,7 +162,7 @@ function getForecastWeatherAPI() {
 
     appendHourlyWeatherData(data);
 
-    fillForecastArrays(data);
+    loopThroughUpcomingData(data);
 
     appendUpcomingWeatherData(data);
   });
@@ -185,18 +201,26 @@ function timestampToLocalHour(timestamp) {
 }
 
 
-function fillForecastArrays(data) {
+function loopThroughUpcomingData(data) {
   upcomingDateComparator = currentDate;
 
   data.list.forEach(function(i) {
     timestampToLocalDate(i.dt);
 
-    if(localDate !== upcomingDateComparator) {
-      fiveDayForecastArray.push(localDate);
+    fillFiveDayForecastArray(i);
 
-      upcomingDateComparator = localDate;
-    }
+    fillUpcomingIconArrays(i);
   });
+
+  console.log("");
+  console.log("current day data count : " + currentDayForecastCountArray.length);
+
+  console.log(fiveDayForecastArray);
+  console.log(upcomingDay1IconArray);
+  console.log(upcomingDay2IconArray);
+  console.log(upcomingDay3IconArray);
+  console.log(upcomingDay4IconArray);
+  console.log(upcomingDay5IconArray);
 }
 
 
@@ -210,10 +234,58 @@ function timestampToLocalDate(timestamp) {
 }
 
 
+function fillFiveDayForecastArray(i) {
+  if(localDate === currentDate) {
+    currentDayForecastCountArray.push(i.dt);
+
+    if(currentDayForecastCountArray.length === 8) {
+      console.log("local date rollover!");
+
+      fiveDayForecastArray.push(localDate);
+    }
+  }
+
+  if(localDate !== upcomingDateComparator) {
+    fiveDayForecastArray.push(localDate);
+
+    upcomingDateComparator = localDate;
+  }
+}
+
+
+function fillUpcomingIconArrays(i) {
+  if(localDate === fiveDayForecastArray[0]) {
+    upcomingDay1IconArray.push(i.weather[0].icon);
+  }
+
+  if(localDate === fiveDayForecastArray[1]) {
+    upcomingDay2IconArray.push(i.weather[0].icon);
+  }
+
+  if(localDate === fiveDayForecastArray[2]) {
+    upcomingDay3IconArray.push(i.weather[0].icon);
+  }
+
+  if(localDate === fiveDayForecastArray[3]) {
+    upcomingDay4IconArray.push(i.weather[0].icon);
+  }
+
+  if(localDate === fiveDayForecastArray[4]) {
+    upcomingDay5IconArray.push(i.weather[0].icon);
+  }
+}
+
+
 function appendUpcomingWeatherData(data) {
   for(var v = 0; v < 5; v++) {
     upcomingDateArray[v].html( fiveDayForecastArray[v].slice(0, 5) );
   }
+
+  /* upcomingIconArray[0].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay1IconArray[4] + ".png>");
+  upcomingIconArray[1].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay2IconArray[4] + ".png>");
+  upcomingIconArray[2].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay3IconArray[4] + ".png>");
+  upcomingIconArray[3].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay4IconArray[4] + ".png>");
+  upcomingIconArray[4].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay5IconArray[2] + ".png>"); */
 }
 
 
