@@ -67,6 +67,24 @@ var upcomingDay5IconArray = [];
 var $upcomingIcon5 = $("#upcoming-icon-5");
 var upcomingIconArray = [$upcomingIcon1, $upcomingIcon2, $upcomingIcon3, $upcomingIcon4, $upcomingIcon5];
 
+var upcomingDay1TempArray = [];
+var $upcomingTempHigh1 = $("#upcoming-temp-high-1");
+var $upcomingTempLow1 = $("#upcoming-temp-low-1");
+var upcomingDay2TempArray = [];
+var $upcomingTempHigh2 = $("#upcoming-temp-high-2");
+var $upcomingTempLow2 = $("#upcoming-temp-low-2");
+var upcomingDay3TempArray = [];
+var $upcomingTempHigh3 = $("#upcoming-temp-high-3");
+var $upcomingTempLow3 = $("#upcoming-temp-low-3");
+var upcomingDay4TempArray = [];
+var $upcomingTempHigh4 = $("#upcoming-temp-high-4");
+var $upcomingTempLow4 = $("#upcoming-temp-low-4");
+var upcomingDay5TempArray = [];
+var $upcomingTempHigh5 = $("#upcoming-temp-high-5");
+var $upcomingTempLow5 = $("#upcoming-temp-low-5");
+var upcomingTempMasterArray = [upcomingDay1TempArray, upcomingDay2TempArray, upcomingDay3TempArray, upcomingDay4TempArray, upcomingDay5TempArray];
+var upcomingTempHighArray = [$upcomingTempHigh1, $upcomingTempHigh2, $upcomingTempHigh3, $upcomingTempHigh4, $upcomingTempHigh5];
+var upcomingTempLowArray = [$upcomingTempLow1, $upcomingTempLow2, $upcomingTempLow3, $upcomingTempLow4, $upcomingTempLow5];
 
 
 
@@ -213,6 +231,8 @@ function loopThroughUpcomingData(data) {
         timestampToLocalDate(j.dt);
 
         fillUpcomingIconArrays(j);
+
+        fillUpcomingTempArrays(j);
       });
     }
   });
@@ -220,12 +240,18 @@ function loopThroughUpcomingData(data) {
   console.log("");
   console.log("current day data count : " + currentDayForecastCountArray.length);
 
-  console.log(fiveDayForecastArray);
+  /* console.log(fiveDayForecastArray);
   console.log(upcomingDay1IconArray);
   console.log(upcomingDay2IconArray);
   console.log(upcomingDay3IconArray);
-  console.log(upcomingDay4IconArray);
+  console.log(upcomingDay4IconArray); */
   console.log(upcomingDay5IconArray);
+
+  /* console.log(upcomingDay1TempArray);
+  console.log(upcomingDay2TempArray);
+  console.log(upcomingDay3TempArray);
+  console.log(upcomingDay4TempArray); */
+  console.log(upcomingDay5TempArray);
 }
 
 
@@ -281,10 +307,20 @@ function fillUpcomingIconArrays(j) {
 }
 
 
+function fillUpcomingTempArrays(j) {
+  for(var x = 0; x < 5; x++) {
+    if(localDate === fiveDayForecastArray[x]) {
+      upcomingTempMasterArray[x].push(j.main.temp);
+    }
+  }
+}
+
+
 function appendUpcomingWeatherData(data) {
   for(var v = 0; v < 5; v++) {
     upcomingDateArray[v].html( fiveDayForecastArray[v].slice(0, 5) );
   }
+
 
   upcomingIconArray[0].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay1IconArray[4] + ".png>");
   upcomingIconArray[1].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay2IconArray[4] + ".png>");
@@ -296,6 +332,15 @@ function appendUpcomingWeatherData(data) {
   }
   else {
     upcomingIconArray[4].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + (upcomingDay5IconArray[upcomingDay5IconArray.length - 1]) + ".png>");
+  }
+
+
+  for(var x = 0; x < 5; x++) {
+    kelvinToFahrenheit( Math.max(...upcomingTempMasterArray[x]) );
+    upcomingTempHighArray[x].html(newTempFahrenheit);
+
+    kelvinToFahrenheit( Math.min(...upcomingTempMasterArray[x]) );
+    upcomingTempLowArray[x].html(newTempFahrenheit);
   }
 }
 
