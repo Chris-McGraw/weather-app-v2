@@ -15,7 +15,7 @@ var $locationDate = $("#location-date");
 var localHour = 0;
 var newTempFahrenheit = 0;
 
-var $currentWeatherIcon = $("#current-weather-icon");
+var $currentWeatherIconContainer = $("#current-weather-icon-container");
 var $currentWeatherDescription = $("#current-weather-description");
 var $currentWeatherTemp = $("#current-weather-temp");
 
@@ -45,6 +45,7 @@ var hourlyTempArray = [$hourlyTemp1, $hourlyTemp2, $hourlyTemp3, $hourlyTemp4, $
 var localDate = "";
 var upcomingDateComparator = "";
 
+var currentDayForecastCountArray = [];
 var fiveDayForecastArray = [];
 
 var $upcomingDate1 = $("#upcoming-date-1");
@@ -54,6 +55,21 @@ var $upcomingDate4 = $("#upcoming-date-4");
 var $upcomingDate5 = $("#upcoming-date-5");
 var upcomingDateArray = [$upcomingDate1, $upcomingDate2, $upcomingDate3, $upcomingDate4, $upcomingDate5];
 
+var upcomingDay1IconArray = [];
+var $upcomingIcon1 = $("#upcoming-icon-1");
+
+var upcomingDay2IconArray = [];
+var $upcomingIcon2 = $("#upcoming-icon-2");
+
+var upcomingDay3IconArray = [];
+var $upcomingIcon3 = $("#upcoming-icon-3");
+
+var upcomingDay4IconArray = [];
+var $upcomingIcon4 = $("#upcoming-icon-4");
+
+var upcomingDay5IconArray = [];
+var $upcomingIcon5 = $("#upcoming-icon-5");
+var upcomingIconArray = [$upcomingIcon1, $upcomingIcon2, $upcomingIcon3, $upcomingIcon4, $upcomingIcon5];
 
 
 
@@ -66,6 +82,11 @@ function geoLocateSuccess(pos) {
   console.log("lat = " + userLat);
   console.log("lon = " + userLon);
 
+  getCurrentDate();
+  getCurrentWeekday();
+  console.log("");
+  console.log(currentDate);
+
   getCurrentWeatherAPI();
   getForecastWeatherAPI();
 }
@@ -73,6 +94,24 @@ function geoLocateSuccess(pos) {
 
 function geoLocateError() {
   console.log("geo blocked");
+}
+
+
+function getCurrentDate() {
+  var date = new Date();
+  var dd = String(date.getDate()).padStart(2, "0");
+  var mm = String(date.getMonth() + 1).padStart(2, "0");
+  var yyyy = date.getFullYear();
+
+  currentDate = mm + "/" + dd + "/" + yyyy;
+}
+
+
+function getCurrentWeekday() {
+  var today = new Date();
+  var weekdayNum = today.getDay();
+
+  currentWeekday = daysOfWeek[weekdayNum];
 }
 
 
@@ -100,36 +139,16 @@ function getCurrentWeatherAPI() {
 function appendCurrentLocationData(data) {
   $locationName.html(data.name + ", " + data.sys.country);
 
-  getCurrentWeekday();
   $locationDate.html(currentWeekday);
 
-  getCurrentDate();
   $locationDate.append(" - " + currentDate);
-}
-
-
-function getCurrentWeekday() {
-  var today = new Date();
-  var weekdayNum = today.getDay();
-
-  currentWeekday = daysOfWeek[weekdayNum];
-}
-
-
-function getCurrentDate() {
-  var date = new Date();
-  var dd = String(date.getDate()).padStart(2, "0");
-  var mm = String(date.getMonth() + 1).padStart(2, "0");
-  var yyyy = date.getFullYear();
-
-  currentDate = mm + "/" + dd + "/" + yyyy;
 }
 
 
 function appendCurrentWeatherData(data) {
   $currentWeatherDescription.html(data.weather[0].main);
 
-  $currentWeatherIcon.html("<img src= http://openweathermap.org/img/w/" + data.weather[0].icon + ".png>");
+  $currentWeatherIconContainer.html("<img class=current-weather-icon src= http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png>");
 
   //$currentWeatherTemp.html(data.main.temp);
   kelvinToFahrenheit(data.main.temp);
@@ -146,7 +165,7 @@ function getForecastWeatherAPI() {
 
     appendHourlyWeatherData(data);
 
-    fillForecastArrays(data);
+    loopThroughUpcomingData(data);
 
     appendUpcomingWeatherData(data);
   });
@@ -158,7 +177,7 @@ function appendHourlyWeatherData(data) {
     timestampToLocalHour(data.list[n].dt);
     hourlyTimeArray[n].html(localHour);
 
-    hourlyIconArray[n].html("<img class='hourly-icon' src= http://openweathermap.org/img/w/" + data.list[n].weather[0].icon + ".png>");
+    hourlyIconArray[n].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + data.list[n].weather[0].icon + ".png>");
 
     kelvinToFahrenheit(data.list[n].main.temp);
     hourlyTempArray[n].html(newTempFahrenheit);
@@ -185,18 +204,26 @@ function timestampToLocalHour(timestamp) {
 }
 
 
-function fillForecastArrays(data) {
+function loopThroughUpcomingData(data) {
   upcomingDateComparator = currentDate;
 
   data.list.forEach(function(i) {
     timestampToLocalDate(i.dt);
 
-    if(localDate !== upcomingDateComparator) {
-      fiveDayForecastArray.push(localDate);
+    fillFiveDayForecastArray(i);
 
-      upcomingDateComparator = localDate;
-    }
+    fillUpcomingIconArrays(i);
   });
+
+  console.log("");
+  console.log("current day data count : " + currentDayForecastCountArray.length);
+
+  console.log(fiveDayForecastArray);
+  console.log(upcomingDay1IconArray);
+  console.log(upcomingDay2IconArray);
+  console.log(upcomingDay3IconArray);
+  console.log(upcomingDay4IconArray);
+  console.log(upcomingDay5IconArray);
 }
 
 
@@ -210,10 +237,58 @@ function timestampToLocalDate(timestamp) {
 }
 
 
+function fillFiveDayForecastArray(i) {
+  if(localDate === currentDate) {
+    currentDayForecastCountArray.push(i.dt);
+
+    if(currentDayForecastCountArray.length === 8) {
+      console.log("local date rollover!");
+
+      fiveDayForecastArray.push(localDate);
+    }
+  }
+
+  if(localDate !== upcomingDateComparator) {
+    fiveDayForecastArray.push(localDate);
+
+    upcomingDateComparator = localDate;
+  }
+}
+
+
+function fillUpcomingIconArrays(i) {
+  if(localDate === fiveDayForecastArray[0]) {
+    upcomingDay1IconArray.push(i.weather[0].icon);
+  }
+
+  if(localDate === fiveDayForecastArray[1]) {
+    upcomingDay2IconArray.push(i.weather[0].icon);
+  }
+
+  if(localDate === fiveDayForecastArray[2]) {
+    upcomingDay3IconArray.push(i.weather[0].icon);
+  }
+
+  if(localDate === fiveDayForecastArray[3]) {
+    upcomingDay4IconArray.push(i.weather[0].icon);
+  }
+
+  if(localDate === fiveDayForecastArray[4]) {
+    upcomingDay5IconArray.push(i.weather[0].icon);
+  }
+}
+
+
 function appendUpcomingWeatherData(data) {
   for(var v = 0; v < 5; v++) {
     upcomingDateArray[v].html( fiveDayForecastArray[v].slice(0, 5) );
   }
+
+  /* upcomingIconArray[0].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay1IconArray[4] + ".png>");
+  upcomingIconArray[1].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay2IconArray[4] + ".png>");
+  upcomingIconArray[2].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay3IconArray[4] + ".png>");
+  upcomingIconArray[3].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay4IconArray[4] + ".png>");
+  upcomingIconArray[4].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay5IconArray[2] + ".png>"); */
 }
 
 

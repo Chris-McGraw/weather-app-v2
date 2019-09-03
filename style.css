@@ -94,17 +94,22 @@
   border: 1px dashed yellow;
 } */
 
-#current-weather-icon {
+#current-weather-icon-container {
   position: relative;
   left: 0;
   right: 0;
 
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   margin: auto;
 
   background-color: #adb1c7;
   border-radius: 10px;
+}
+
+.current-weather-icon {
+  width: 80px;
+  height: 80px;
 }
 
 #hourly-weather-container {
@@ -132,8 +137,11 @@
 }
 
 .hourly-icon {
-  width: auto;
+  width: 40px;
   height: 40px;
+
+  background-color: #adb1c7;
+  border-radius: 10px;
 }
 
 
@@ -164,7 +172,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 
-  height: 50px;
+  height: 40px;
 
   border-bottom: 1px solid black;
 }
