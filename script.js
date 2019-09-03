@@ -57,16 +57,12 @@ var upcomingDateArray = [$upcomingDate1, $upcomingDate2, $upcomingDate3, $upcomi
 
 var upcomingDay1IconArray = [];
 var $upcomingIcon1 = $("#upcoming-icon-1");
-
 var upcomingDay2IconArray = [];
 var $upcomingIcon2 = $("#upcoming-icon-2");
-
 var upcomingDay3IconArray = [];
 var $upcomingIcon3 = $("#upcoming-icon-3");
-
 var upcomingDay4IconArray = [];
 var $upcomingIcon4 = $("#upcoming-icon-4");
-
 var upcomingDay5IconArray = [];
 var $upcomingIcon5 = $("#upcoming-icon-5");
 var upcomingIconArray = [$upcomingIcon1, $upcomingIcon2, $upcomingIcon3, $upcomingIcon4, $upcomingIcon5];
@@ -212,7 +208,13 @@ function loopThroughUpcomingData(data) {
 
     fillFiveDayForecastArray(i);
 
-    fillUpcomingIconArrays(i);
+    if(i === data.list[39]) {
+      data.list.forEach(function(j) {
+        timestampToLocalDate(j.dt);
+
+        fillUpcomingIconArrays(j);
+      });
+    }
   });
 
   console.log("");
@@ -256,25 +258,25 @@ function fillFiveDayForecastArray(i) {
 }
 
 
-function fillUpcomingIconArrays(i) {
+function fillUpcomingIconArrays(j) {
   if(localDate === fiveDayForecastArray[0]) {
-    upcomingDay1IconArray.push(i.weather[0].icon);
+    upcomingDay1IconArray.push(j.weather[0].icon);
   }
 
   if(localDate === fiveDayForecastArray[1]) {
-    upcomingDay2IconArray.push(i.weather[0].icon);
+    upcomingDay2IconArray.push(j.weather[0].icon);
   }
 
   if(localDate === fiveDayForecastArray[2]) {
-    upcomingDay3IconArray.push(i.weather[0].icon);
+    upcomingDay3IconArray.push(j.weather[0].icon);
   }
 
   if(localDate === fiveDayForecastArray[3]) {
-    upcomingDay4IconArray.push(i.weather[0].icon);
+    upcomingDay4IconArray.push(j.weather[0].icon);
   }
 
   if(localDate === fiveDayForecastArray[4]) {
-    upcomingDay5IconArray.push(i.weather[0].icon);
+    upcomingDay5IconArray.push(j.weather[0].icon);
   }
 }
 
@@ -284,11 +286,17 @@ function appendUpcomingWeatherData(data) {
     upcomingDateArray[v].html( fiveDayForecastArray[v].slice(0, 5) );
   }
 
-  /* upcomingIconArray[0].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay1IconArray[4] + ".png>");
+  upcomingIconArray[0].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay1IconArray[4] + ".png>");
   upcomingIconArray[1].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay2IconArray[4] + ".png>");
   upcomingIconArray[2].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay3IconArray[4] + ".png>");
   upcomingIconArray[3].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay4IconArray[4] + ".png>");
-  upcomingIconArray[4].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay5IconArray[2] + ".png>"); */
+
+  if(upcomingDay5IconArray.length >= 5) {
+    upcomingIconArray[4].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay5IconArray[4] + ".png>");
+  }
+  else {
+    upcomingIconArray[4].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + (upcomingDay5IconArray[upcomingDay5IconArray.length - 1]) + ".png>");
+  }
 }
 
 
