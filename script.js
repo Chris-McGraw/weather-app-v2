@@ -13,6 +13,7 @@ var $locationDate = $("#location-date");
 
 /* ~~~~ DAILY WEATHER SECTION ~~~~ */
 var localHour = 0;
+var newTempRawFahrenheit = 0;
 var newTempFahrenheit = 0;
 
 var $currentWeatherIconContainer = $("#current-weather-icon-container");
@@ -39,6 +40,12 @@ var $hourlyTemp3 = $("#hourly-temp-3");
 var $hourlyTemp4 = $("#hourly-temp-4");
 var $hourlyTemp5 = $("#hourly-temp-5");
 var hourlyTempArray = [$hourlyTemp1, $hourlyTemp2, $hourlyTemp3, $hourlyTemp4, $hourlyTemp5];
+
+
+/* ~~~~~ HOURLY CHART SECTION ~~~~~ */
+var hourlyChartTimeArray = [];
+var hourlyChartTempArray = [];
+var hourlyChartHumidityArray = [];
 
 
 /* ~~ UPCOMING FORECAST SECTION ~~ */
@@ -131,9 +138,9 @@ function getCurrentWeekday() {
 
 
 function kelvinToFahrenheit(temp) {
-  newTempFahrenheit = (temp - 273.15) * 9/5 + 32;
+  newTempRawFahrenheit = (temp - 273.15) * 9/5 + 32;
 
-  newTempFahrenheit = Math.round(newTempFahrenheit) + "&deg;";
+  newTempFahrenheit = Math.round(newTempRawFahrenheit) + "&deg;";
 }
 
 
@@ -196,7 +203,85 @@ function appendHourlyWeatherData(data) {
 
     kelvinToFahrenheit(data.list[n].main.temp);
     hourlyTempArray[n].html(newTempFahrenheit);
+
+    hourlyChartTimeArray.push(localHour);
+    hourlyChartTempArray.push( Math.round(newTempRawFahrenheit) );
+    hourlyChartHumidityArray.push( Math.round(data.list[n].main.humidity) );
   }
+
+
+
+  console.log(hourlyChartTempArray);
+
+  var myChart = Highcharts.chart('chart-container', {
+    chart: {
+      zoomType: 'xy'
+    },
+    title: {
+      text: 'Upcoming Weather Chart'
+    },
+    xAxis: {
+      categories: [hourlyChartTimeArray[0],
+      hourlyChartTimeArray[1],
+      hourlyChartTimeArray[2],
+      hourlyChartTimeArray[3],
+      hourlyChartTimeArray[4]],
+      crosshair: true
+    },
+    yAxis: [{
+      labels: {
+        format: '{value}°F',
+        style: {
+          color: Highcharts.getOptions().colors[0]
+        }
+      },
+      title: {
+        text: ""
+      },
+      opposite: true
+    },
+    {
+      labels: {
+        format: '{value}%',
+        style: {
+          color: Highcharts.getOptions().colors[1]
+        }
+      },
+      title: {
+        text: ""
+      },
+      opposite: true
+    }],
+    tooltip: {
+      shared: true
+    },
+    series: [{
+      name: "Temperature",
+      type: "spline",
+      data: [hourlyChartTempArray[0],
+        hourlyChartTempArray[1],
+        hourlyChartTempArray[2],
+        hourlyChartTempArray[3],
+        hourlyChartTempArray[4]],
+      tooltip: {
+        valueSuffix: "°F"
+      }
+    }, {
+      name: "Humidity",
+      type: "spline",
+      yAxis: 1,
+      data: [hourlyChartHumidityArray[0],
+        hourlyChartHumidityArray[1],
+        hourlyChartHumidityArray[2],
+        hourlyChartHumidityArray[3],
+        hourlyChartHumidityArray[4]],
+      tooltip: {
+        valueSuffix: "%"
+      }
+    }]
+  });
+
+
 }
 
 
