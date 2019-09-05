@@ -46,6 +46,7 @@ var hourlyTempArray = [$hourlyTemp1, $hourlyTemp2, $hourlyTemp3, $hourlyTemp4, $
 var hourlyChartTimeArray = [];
 var hourlyChartTempArray = [];
 var hourlyChartHumidityArray = [];
+var hourlyChartWindArray = [];
 
 
 /* ~~ UPCOMING FORECAST SECTION ~~ */
@@ -207,18 +208,19 @@ function appendHourlyWeatherData(data) {
     hourlyChartTimeArray.push(localHour);
     hourlyChartTempArray.push( Math.round(newTempRawFahrenheit) );
     hourlyChartHumidityArray.push( Math.round(data.list[n].main.humidity) );
+    hourlyChartWindArray.push( Math.round(data.list[n].wind.speed) );
   }
 
 
 
   console.log(hourlyChartTempArray);
 
-  var myChart = Highcharts.chart('chart-container', {
+  var myChart = Highcharts.chart("chart-container", {
     chart: {
-      zoomType: 'xy'
+      zoomType: "xy"
     },
     title: {
-      text: 'Upcoming Weather Chart'
+      text: "Detailed Hourly Weather"
     },
     xAxis: {
       categories: [hourlyChartTimeArray[0],
@@ -230,7 +232,7 @@ function appendHourlyWeatherData(data) {
     },
     yAxis: [{
       labels: {
-        format: '{value}°F',
+        format: "{value}°F",
         style: {
           color: Highcharts.getOptions().colors[0]
         }
@@ -251,6 +253,17 @@ function appendHourlyWeatherData(data) {
         text: ""
       },
       opposite: true
+    },
+    {
+      labels: {
+        format: '{value}m/sec',
+        style: {
+          color: Highcharts.getOptions().colors[2]
+        }
+      },
+      title: {
+        text: ""
+      }
     }],
     tooltip: {
       shared: true
@@ -266,7 +279,8 @@ function appendHourlyWeatherData(data) {
       tooltip: {
         valueSuffix: "°F"
       }
-    }, {
+    },
+    {
       name: "Humidity",
       type: "spline",
       yAxis: 1,
@@ -277,6 +291,19 @@ function appendHourlyWeatherData(data) {
         hourlyChartHumidityArray[4]],
       tooltip: {
         valueSuffix: "%"
+      }
+    },
+    {
+      name: "Wind Speed",
+      type: "spline",
+      yAxis: 2,
+      data: [hourlyChartWindArray[0],
+        hourlyChartWindArray[1],
+        hourlyChartWindArray[2],
+        hourlyChartWindArray[3],
+        hourlyChartWindArray[4]],
+      tooltip: {
+        valueSuffix: "m/sec"
       }
     }]
   });
