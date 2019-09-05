@@ -146,6 +146,13 @@
 }
 
 
+/* ------------------------- HOURLY CHART SECTION ------------------------- */
+#chart-container {
+  width: 100%;
+  height: 200px;
+}
+
+
 
 /* ---------------------- UPCOMING FORECAST SECTION ---------------------- */
 #upcoming-forecast-section {
