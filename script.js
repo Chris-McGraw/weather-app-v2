@@ -205,14 +205,41 @@ function appendHourlyWeatherData(data) {
     kelvinToFahrenheit(data.list[n].main.temp);
     hourlyTempArray[n].html(newTempFahrenheit);
 
-    hourlyChartTimeArray.push(localHour);
-    hourlyChartTempArray.push( Math.round(newTempRawFahrenheit) );
-    hourlyChartHumidityArray.push( Math.round(data.list[n].main.humidity) );
-    hourlyChartWindArray.push( Math.round(data.list[n].wind.speed) );
+    fillHourlyChartArrays(data, n);
   }
 
+  appendHourlyChartData();
+}
 
 
+function timestampToLocalHour(timestamp) {
+  localHour = 0;
+
+  var date = new Date( timestamp * 1000 );
+  localHour = date.getHours();
+
+  if(localHour === 0) {
+    localHour = "12AM";
+  }
+  else if(localHour > 12) {
+    localHour -= 12;
+    localHour += "PM";
+  }
+  else {
+    localHour += "AM";
+  }
+}
+
+
+function fillHourlyChartArrays(data, n) {
+  hourlyChartTimeArray.push(localHour);
+  hourlyChartTempArray.push( Math.round(newTempRawFahrenheit) );
+  hourlyChartHumidityArray.push( Math.round(data.list[n].main.humidity) );
+  hourlyChartWindArray.push( Math.round(data.list[n].wind.speed) );
+}
+
+
+function appendHourlyChartData() {
   console.log(hourlyChartTempArray);
 
   var myChart = Highcharts.chart("chart-container", {
@@ -307,27 +334,6 @@ function appendHourlyWeatherData(data) {
       }
     }]
   });
-
-
-}
-
-
-function timestampToLocalHour(timestamp) {
-  localHour = 0;
-
-  var date = new Date( timestamp * 1000 );
-  localHour = date.getHours();
-
-  if(localHour === 0) {
-    localHour = "12AM";
-  }
-  else if(localHour > 12) {
-    localHour -= 12;
-    localHour += "PM";
-  }
-  else {
-    localHour += "AM";
-  }
 }
 
 
