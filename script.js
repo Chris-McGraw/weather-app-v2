@@ -20,6 +20,11 @@ var $currentWeatherIconContainer = $("#current-weather-icon-container");
 var $currentWeatherDescription = $("#current-weather-description");
 var $currentWeatherTemp = $("#current-weather-temp");
 
+var $currentWeatherMaxTemp = $("#current-weather-max-temp");
+var $currentWeatherMinTemp = $("#current-weather-min-temp");
+var $currentWeatherHumidity = $("#current-weather-humidity");
+var $currentWeatherWindSpeed = $("#current-weather-wind-speed");
+
 var $hourlyTime1 = $("#hourly-time-1");
 var $hourlyTime2 = $("#hourly-time-2");
 var $hourlyTime3 = $("#hourly-time-3");
@@ -176,6 +181,14 @@ function appendCurrentWeatherData(data) {
   //$currentWeatherTemp.html(data.main.temp);
   kelvinToFahrenheit(data.main.temp);
   $currentWeatherTemp.html(newTempFahrenheit + "F");
+
+  kelvinToFahrenheit(data.main.temp_max);
+  $currentWeatherMaxTemp.html(newTempFahrenheit);
+  kelvinToFahrenheit(data.main.temp_min);
+  $currentWeatherMinTemp.html(newTempFahrenheit);
+
+  $currentWeatherHumidity.html(data.main.humidity + "%");
+  $currentWeatherWindSpeed.html(Math.round(data.wind.speed) + "m/sec");
 }
 
 
