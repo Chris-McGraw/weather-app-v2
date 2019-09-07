@@ -20,6 +20,11 @@ var $currentWeatherIconContainer = $("#current-weather-icon-container");
 var $currentWeatherDescription = $("#current-weather-description");
 var $currentWeatherTemp = $("#current-weather-temp");
 
+var $currentWeatherMaxTemp = $("#current-weather-max-temp");
+var $currentWeatherMinTemp = $("#current-weather-min-temp");
+var $currentWeatherHumidity = $("#current-weather-humidity");
+var $currentWeatherWindSpeed = $("#current-weather-wind-speed");
+
 var $hourlyTime1 = $("#hourly-time-1");
 var $hourlyTime2 = $("#hourly-time-2");
 var $hourlyTime3 = $("#hourly-time-3");
@@ -176,6 +181,14 @@ function appendCurrentWeatherData(data) {
   //$currentWeatherTemp.html(data.main.temp);
   kelvinToFahrenheit(data.main.temp);
   $currentWeatherTemp.html(newTempFahrenheit + "F");
+
+  kelvinToFahrenheit(data.main.temp_max);
+  $currentWeatherMaxTemp.html(newTempFahrenheit);
+  kelvinToFahrenheit(data.main.temp_min);
+  $currentWeatherMinTemp.html(newTempFahrenheit);
+
+  $currentWeatherHumidity.html(data.main.humidity + "%");
+  $currentWeatherWindSpeed.html(Math.round(data.wind.speed) + "m/sec");
 }
 
 
@@ -205,14 +218,41 @@ function appendHourlyWeatherData(data) {
     kelvinToFahrenheit(data.list[n].main.temp);
     hourlyTempArray[n].html(newTempFahrenheit);
 
-    hourlyChartTimeArray.push(localHour);
-    hourlyChartTempArray.push( Math.round(newTempRawFahrenheit) );
-    hourlyChartHumidityArray.push( Math.round(data.list[n].main.humidity) );
-    hourlyChartWindArray.push( Math.round(data.list[n].wind.speed) );
+    fillHourlyChartArrays(data, n);
   }
 
+  appendHourlyChartData();
+}
 
 
+function timestampToLocalHour(timestamp) {
+  localHour = 0;
+
+  var date = new Date( timestamp * 1000 );
+  localHour = date.getHours();
+
+  if(localHour === 0) {
+    localHour = "12AM";
+  }
+  else if(localHour > 12) {
+    localHour -= 12;
+    localHour += "PM";
+  }
+  else {
+    localHour += "AM";
+  }
+}
+
+
+function fillHourlyChartArrays(data, n) {
+  hourlyChartTimeArray.push(localHour);
+  hourlyChartTempArray.push( Math.round(newTempRawFahrenheit) );
+  hourlyChartHumidityArray.push( Math.round(data.list[n].main.humidity) );
+  hourlyChartWindArray.push( Math.round(data.list[n].wind.speed) );
+}
+
+
+function appendHourlyChartData() {
   console.log(hourlyChartTempArray);
 
   var myChart = Highcharts.chart("chart-container", {
@@ -307,27 +347,6 @@ function appendHourlyWeatherData(data) {
       }
     }]
   });
-
-
-}
-
-
-function timestampToLocalHour(timestamp) {
-  localHour = 0;
-
-  var date = new Date( timestamp * 1000 );
-  localHour = date.getHours();
-
-  if(localHour === 0) {
-    localHour = "12AM";
-  }
-  else if(localHour > 12) {
-    localHour -= 12;
-    localHour += "PM";
-  }
-  else {
-    localHour += "AM";
-  }
 }
 
 

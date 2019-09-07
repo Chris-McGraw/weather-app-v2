@@ -23,6 +23,10 @@
   background-color: #3c467b;
 }
 
+.row-highlight-2 {
+  background-color: #adb1c7;
+}
+
 
 
 /* ----------------------- CURRENT LOCATION SECTION ----------------------- */
@@ -33,8 +37,8 @@
 
   position: relative;
 
-  /* height: 80px; */
-  height: 20px;
+  height: 80px;
+  /* height: 20px; */
 
   background-color: black;
   border-bottom: 1px solid black;
@@ -79,9 +83,9 @@
 
 #current-weather-container {
   grid-column: span 1;
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
 
   height: 100%;
 
@@ -91,8 +95,17 @@
   border-bottom: 1px solid black;
 }
 
-/* #current-weather-inner-tile {
-  border: 1px dashed yellow;
+#current-weather-main-tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 150px;
+
+  border-bottom: 1px solid black;
+}
+
+/* #current-weather-main-inner-tile {
 } */
 
 #current-weather-icon-container {
@@ -111,6 +124,30 @@
 .current-weather-icon {
   width: 80px;
   height: 80px;
+}
+
+.current-weather-row-top {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  height: 25px;
+
+  font-size: 12px;
+}
+
+#current-weather-container > div:nth-child(3) {
+  border-bottom: 1px solid black;
+}
+
+.current-weather-sub-tile {
+  grid-column: span 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.current-weather-row-top > div:nth-child(1) {
+  border-right: 1px solid black;
 }
 
 #hourly-weather-container {
@@ -171,8 +208,8 @@
 
   position: relative;
 
-  /* height: 80px; */
-  height: 20px;
+  height: 80px;
+  /* height: 20px; */
 
   border-bottom: 1px solid black;
 }
