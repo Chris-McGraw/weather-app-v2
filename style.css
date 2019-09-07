@@ -184,9 +184,43 @@
 
 
 /* ------------------------- HOURLY CHART SECTION ------------------------- */
-#chart-container {
+#hourly-chart-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   width: 100%;
   height: 250px;
+}
+
+#hourly-chart-loading-spinner {
+  position: absolute;
+  left: 0;
+  right: 0;
+
+  height: 40px;
+  width: 40px;
+  margin: auto;
+
+  border: 2px solid #323d74;
+  border-top-color: transparent;
+  border-radius: 50%;
+
+  opacity: 1.0;
+}
+
+.rotate-loading-spinner {
+  animation: rotateSpinner 2.5s infinite linear;
+}
+
+@keyframes rotateSpinner {
+  0%    { transform: rotate(0deg); }
+  100%  { transform: rotate(360deg); }
+}
+
+#chart-container {
+  width: 100%;
+  height: 100%;
 }
 
 

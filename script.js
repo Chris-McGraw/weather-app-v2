@@ -53,6 +53,9 @@ var hourlyChartTempArray = [];
 var hourlyChartHumidityArray = [];
 var hourlyChartWindArray = [];
 
+var $hourlyChartLoadingSpinner = $("#hourly-chart-loading-spinner");
+
+
 
 /* ~~ UPCOMING FORECAST SECTION ~~ */
 var localDate = "";
@@ -122,6 +125,9 @@ function geoLocateSuccess(pos) {
 
 function geoLocateError() {
   console.log("geo blocked");
+
+  $hourlyChartLoadingSpinner.removeClass("rotate-loading-spinner");
+  $hourlyChartLoadingSpinner.css("display", "none");
 }
 
 
@@ -204,6 +210,8 @@ function getForecastWeatherAPI() {
     loopThroughUpcomingData(data);
 
     appendUpcomingWeatherData(data);
+
+    appendHourlyChartData();
   });
 }
 
@@ -220,8 +228,6 @@ function appendHourlyWeatherData(data) {
 
     fillHourlyChartArrays(data, n);
   }
-
-  appendHourlyChartData();
 }
 
 
@@ -249,104 +255,6 @@ function fillHourlyChartArrays(data, n) {
   hourlyChartTempArray.push( Math.round(newTempRawFahrenheit) );
   hourlyChartHumidityArray.push( Math.round(data.list[n].main.humidity) );
   hourlyChartWindArray.push( Math.round(data.list[n].wind.speed) );
-}
-
-
-function appendHourlyChartData() {
-  console.log(hourlyChartTempArray);
-
-  var myChart = Highcharts.chart("chart-container", {
-    chart: {
-      zoomType: "xy"
-    },
-    title: {
-      text: "Detailed Hourly Weather"
-    },
-    xAxis: {
-      categories: [hourlyChartTimeArray[0],
-      hourlyChartTimeArray[1],
-      hourlyChartTimeArray[2],
-      hourlyChartTimeArray[3],
-      hourlyChartTimeArray[4]],
-      crosshair: true
-    },
-    yAxis: [{
-      labels: {
-        format: "{value}°F",
-        style: {
-          color: Highcharts.getOptions().colors[0]
-        }
-      },
-      title: {
-        text: ""
-      },
-      opposite: true
-    },
-    {
-      labels: {
-        format: '{value}%',
-        style: {
-          color: Highcharts.getOptions().colors[1]
-        }
-      },
-      title: {
-        text: ""
-      },
-      opposite: true
-    },
-    {
-      labels: {
-        format: '{value}m/sec',
-        style: {
-          color: Highcharts.getOptions().colors[2]
-        }
-      },
-      title: {
-        text: ""
-      }
-    }],
-    tooltip: {
-      shared: true
-    },
-    series: [{
-      name: "Temperature",
-      type: "spline",
-      data: [hourlyChartTempArray[0],
-        hourlyChartTempArray[1],
-        hourlyChartTempArray[2],
-        hourlyChartTempArray[3],
-        hourlyChartTempArray[4]],
-      tooltip: {
-        valueSuffix: "°F"
-      }
-    },
-    {
-      name: "Humidity",
-      type: "spline",
-      yAxis: 1,
-      data: [hourlyChartHumidityArray[0],
-        hourlyChartHumidityArray[1],
-        hourlyChartHumidityArray[2],
-        hourlyChartHumidityArray[3],
-        hourlyChartHumidityArray[4]],
-      tooltip: {
-        valueSuffix: "%"
-      }
-    },
-    {
-      name: "Wind Speed",
-      type: "spline",
-      yAxis: 2,
-      data: [hourlyChartWindArray[0],
-        hourlyChartWindArray[1],
-        hourlyChartWindArray[2],
-        hourlyChartWindArray[3],
-        hourlyChartWindArray[4]],
-      tooltip: {
-        valueSuffix: "m/sec"
-      }
-    }]
-  });
 }
 
 
@@ -461,10 +369,113 @@ function appendUpcomingWeatherData(data) {
 }
 
 
+function appendHourlyChartData() {
+  console.log(hourlyChartTempArray);
+
+  $hourlyChartLoadingSpinner.removeClass("rotate-loading-spinner");
+  $hourlyChartLoadingSpinner.css("display", "none");
+
+  var myChart = Highcharts.chart("chart-container", {
+    chart: {
+      zoomType: "xy"
+    },
+    title: {
+      text: "Detailed Hourly Weather"
+    },
+    xAxis: {
+      categories: [hourlyChartTimeArray[0],
+      hourlyChartTimeArray[1],
+      hourlyChartTimeArray[2],
+      hourlyChartTimeArray[3],
+      hourlyChartTimeArray[4]],
+      crosshair: true
+    },
+    yAxis: [{
+      labels: {
+        format: "{value}°F",
+        style: {
+          color: Highcharts.getOptions().colors[0]
+        }
+      },
+      title: {
+        text: ""
+      },
+      opposite: true
+    },
+    {
+      labels: {
+        format: '{value}%',
+        style: {
+          color: Highcharts.getOptions().colors[1]
+        }
+      },
+      title: {
+        text: ""
+      },
+      opposite: true
+    },
+    {
+      labels: {
+        format: '{value}m/sec',
+        style: {
+          color: Highcharts.getOptions().colors[2]
+        }
+      },
+      title: {
+        text: ""
+      }
+    }],
+    tooltip: {
+      shared: true
+    },
+    series: [{
+      name: "Temperature",
+      type: "spline",
+      data: [hourlyChartTempArray[0],
+        hourlyChartTempArray[1],
+        hourlyChartTempArray[2],
+        hourlyChartTempArray[3],
+        hourlyChartTempArray[4]],
+      tooltip: {
+        valueSuffix: "°F"
+      }
+    },
+    {
+      name: "Humidity",
+      type: "spline",
+      yAxis: 1,
+      data: [hourlyChartHumidityArray[0],
+        hourlyChartHumidityArray[1],
+        hourlyChartHumidityArray[2],
+        hourlyChartHumidityArray[3],
+        hourlyChartHumidityArray[4]],
+      tooltip: {
+        valueSuffix: "%"
+      }
+    },
+    {
+      name: "Wind Speed",
+      type: "spline",
+      yAxis: 2,
+      data: [hourlyChartWindArray[0],
+        hourlyChartWindArray[1],
+        hourlyChartWindArray[2],
+        hourlyChartWindArray[3],
+        hourlyChartWindArray[4]],
+      tooltip: {
+        valueSuffix: "m/sec"
+      }
+    }]
+  });
+}
+
+
 
 
 
 /* ---------------------------- EVENT HANDLERS ---------------------------- */
 $(document).ready(function() {
+  $hourlyChartLoadingSpinner.addClass("rotate-loading-spinner");
+
   navigator.geolocation.getCurrentPosition(geoLocateSuccess, geoLocateError);
 });
