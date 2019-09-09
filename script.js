@@ -194,7 +194,7 @@ function appendCurrentWeatherData(data) {
   $currentWeatherMinTemp.html(newTempFahrenheit);
 
   $currentWeatherHumidity.html(data.main.humidity + "%");
-  $currentWeatherWindSpeed.html(Math.round(data.wind.speed) + "m/sec");
+  $currentWeatherWindSpeed.html(Math.round(data.wind.speed * 2.237) + "mph");
 }
 
 
@@ -254,7 +254,7 @@ function fillHourlyChartArrays(data, n) {
   hourlyChartTimeArray.push(localHour);
   hourlyChartTempArray.push( Math.round(newTempRawFahrenheit) );
   hourlyChartHumidityArray.push( Math.round(data.list[n].main.humidity) );
-  hourlyChartWindArray.push( Math.round(data.list[n].wind.speed) );
+  hourlyChartWindArray.push( Math.round(data.list[n].wind.speed * 2.237) );
 }
 
 
@@ -370,8 +370,6 @@ function appendUpcomingWeatherData(data) {
 
 
 function appendHourlyChartData() {
-  console.log(hourlyChartTempArray);
-
   $hourlyChartLoadingSpinner.removeClass("rotate-loading-spinner");
   $hourlyChartLoadingSpinner.css("display", "none");
 
@@ -400,6 +398,7 @@ function appendHourlyChartData() {
       title: {
         text: ""
       },
+      allowDecimals: false,
       opposite: true
     },
     {
@@ -412,18 +411,20 @@ function appendHourlyChartData() {
       title: {
         text: ""
       },
+      allowDecimals: false,
       opposite: true
     },
     {
       labels: {
-        format: '{value}m/sec',
+        format: '{value}mph',
         style: {
           color: Highcharts.getOptions().colors[2]
         }
       },
       title: {
         text: ""
-      }
+      },
+      allowDecimals: false
     }],
     tooltip: {
       shared: true
@@ -463,7 +464,7 @@ function appendHourlyChartData() {
         hourlyChartWindArray[3],
         hourlyChartWindArray[4]],
       tooltip: {
-        valueSuffix: "m/sec"
+        valueSuffix: "mph"
       }
     }]
   });
