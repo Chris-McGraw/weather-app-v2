@@ -157,7 +157,7 @@ function kelvinToFahrenheit(temp) {
 
 
 function getCurrentWeatherAPI() {
-  var apiAddress = `http://api.openweathermap.org/data/2.5/weather?lat=${userLat}&lon=${userLon}&APPID=1a21bb575add2b00bb03906bf2e18e87`;
+  var apiAddress = `https://api.openweathermap.org/data/2.5/weather?lat=${userLat}&lon=${userLon}&APPID=1a21bb575add2b00bb03906bf2e18e87`;
 
   $.get(apiAddress).done(function(data) {
     console.log("");
@@ -182,7 +182,7 @@ function appendCurrentLocationData(data) {
 function appendCurrentWeatherData(data) {
   $currentWeatherDescription.html(data.weather[0].main);
 
-  $currentWeatherIconContainer.html("<img class=current-weather-icon src= http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png>");
+  $currentWeatherIconContainer.html("<img class=current-weather-icon src= https://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png>");
 
   //$currentWeatherTemp.html(data.main.temp);
   kelvinToFahrenheit(data.main.temp);
@@ -199,7 +199,7 @@ function appendCurrentWeatherData(data) {
 
 
 function getForecastWeatherAPI() {
-  var apiAddress = `http://api.openweathermap.org/data/2.5/forecast?lat=${userLat}&lon=${userLon}&APPID=1a21bb575add2b00bb03906bf2e18e87`;
+  var apiAddress = `https://api.openweathermap.org/data/2.5/forecast?lat=${userLat}&lon=${userLon}&APPID=1a21bb575add2b00bb03906bf2e18e87`;
 
   $.get(apiAddress).done(function(data) {
     console.log("");
@@ -221,7 +221,7 @@ function appendHourlyWeatherData(data) {
     timestampToLocalHour(data.list[n].dt);
     hourlyTimeArray[n].html(localHour);
 
-    hourlyIconArray[n].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + data.list[n].weather[0].icon + ".png>");
+    hourlyIconArray[n].html("<img class='hourly-icon' src= https://openweathermap.org/img/wn/" + data.list[n].weather[0].icon + ".png>");
 
     kelvinToFahrenheit(data.list[n].main.temp);
     hourlyTempArray[n].html(newTempFahrenheit);
@@ -349,13 +349,13 @@ function appendUpcomingWeatherData(data) {
 
 
   for(var y = 0; y < 4; y++) {
-    upcomingIconArray[y].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDayIconMasterArray[y][4] + ".png>");
+    upcomingIconArray[y].html("<img class='hourly-icon' src= https://openweathermap.org/img/wn/" + upcomingDayIconMasterArray[y][4] + ".png>");
   }
   if(upcomingDay5IconArray.length >= 5) {
-    upcomingIconArray[4].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + upcomingDay5IconArray[4] + ".png>");
+    upcomingIconArray[4].html("<img class='hourly-icon' src= https://openweathermap.org/img/wn/" + upcomingDay5IconArray[4] + ".png>");
   }
   else {
-    upcomingIconArray[4].html("<img class='hourly-icon' src= http://openweathermap.org/img/wn/" + (upcomingDay5IconArray[upcomingDay5IconArray.length - 1]) + ".png>");
+    upcomingIconArray[4].html("<img class='hourly-icon' src= https://openweathermap.org/img/wn/" + (upcomingDay5IconArray[upcomingDay5IconArray.length - 1]) + ".png>");
   }
 
 
